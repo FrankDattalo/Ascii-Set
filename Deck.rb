@@ -15,6 +15,7 @@ class Deck
       end
     end
     @deck.shuffle!
+    @deck.shuffle!
   end
 
 
