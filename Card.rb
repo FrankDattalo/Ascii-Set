@@ -38,4 +38,8 @@ class Card
   def shape
     @shape
   end
+
+  def to_s
+    "(#{@color}, #{@number}, #{@shape}, #{@texture})"
+  end
 end
