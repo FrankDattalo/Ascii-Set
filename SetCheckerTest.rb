@@ -1,4 +1,4 @@
-require_relative "./SetChecker"
+require_relative "./Card"
 require_relative "./Deck"
 
 deck = Deck.new
@@ -11,5 +11,5 @@ while !deck.is_empty?
   puts c2
   puts c3
 
-  puts "Is Set: #{SetChecker.is_set? c1, c2, c3}"
+  puts "Is Set: #{Card.is_set? c1, c2, c3}"
 end
