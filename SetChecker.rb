@@ -22,13 +22,10 @@ class SetChecker
   end
 
   def self.contains_all_different(property, card1, card2, card3)
-    property_map = Hash.new #map of all property values
-    [card1, card2, card3].each do |card| #foreach card
-      prop_val = card.send(property) #get its property value
-      return false if property_map.has_key? prop_val # if that one already exits return false
-      property_map[prop_val] = true # add to property map
-    end
-    true # true because they must be all different values
+    return false if card1.send(property) == card2.send(property)
+    return false if card1.send(property) == card3.send(property)
+    return false if card2.send(property) == card3.send(property)
+    true
   end
 
 end
