@@ -18,7 +18,7 @@ class Card
 
   def initialize(number, color, shape, texture)
     @shape = shape
-      @color = color
+    @color = color
     @texture = texture
     @number = number
   end
