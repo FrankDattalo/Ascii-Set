@@ -43,6 +43,10 @@ class Card
     "(#{@color}, #{@number}, #{@shape}, #{@texture})"
   end
 
+  def to_ascii
+
+  end
+
 
   def self.is_set?(card1, card2, card3)
     Card.contains_same_or_all_different(:color, card1, card2, card3) &&

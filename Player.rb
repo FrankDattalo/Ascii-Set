@@ -1,15 +1,11 @@
 class Player
 
 
-  def initialize(name, score, stuck, hint, set, attempts, speed, ready)
+  def initialize(name, set, stuck, score)
     @name = name
-    @score = score
-    @stuck = stuck
-    @hint = hint
     @set = set
-    @attempts = attempts
-    @speed = speed
-    @ready = ready
+    @stuck = stuck
+    @score = score
   end
 
   def name
@@ -20,34 +16,20 @@ class Player
     @score
   end
 
-  def score=(new_score)
+  def score(new_score)
     @score=new_score
   end
 
-  def stuck
-    @stuck
+  def stuck(yes_or_no)
+    @stuck = yes_or_no
   end
 
-  def hint
-    @hint
+  def set(set_string)
+    @set = set_string
   end
 
-  def set
-    @set
+  def send_set
+
   end
-
-  def attempts
-    @attempts
-  end
-
-  def speed
-    @speed
-  end
-
-  def ready
-    @ready
-  end
-
-
 
 end
