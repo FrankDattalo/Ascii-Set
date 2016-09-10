@@ -1,3 +1,4 @@
+require Colorize
 class Card
 
   def self.number
@@ -43,7 +44,8 @@ class Card
     "(#{@color}, #{@number}, #{@shape}, #{@texture})"
   end
 
-  def to_ascii
+  def print
+    red_color = "----------------\n|              |\n|             |\n----------------".red
 
   end
 
