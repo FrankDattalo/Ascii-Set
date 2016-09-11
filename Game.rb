@@ -33,7 +33,9 @@ class Game
     cards = get_cards(index_1, index_2, index_3)
     Card.is_set?(cards[0], cards[1], cards[2])
   end
+
   private
+
   def get_cards(index_1, index_2, index_3)
     ret = []
     ret << @active_cards[index_1]

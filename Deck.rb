@@ -24,11 +24,13 @@ class Deck
       range2.each do |y|
         range3 = ((y+1)..(@deck.length-1)).to_a
         range3.each do |z|
-          card1 = @deck[x]
-          card2 = @deck[y]
-          card3 = @deck[z]
-          if Card.is_set?(card1, card2, card3)
-            return true
+          if x != y && x != z && y != z # ensure that the cards that we
+            card1 = @deck[x]            # are looking at are not all the same
+            card2 = @deck[y]
+            card3 = @deck[z]
+            if Card.is_set?(card1, card2, card3)
+              return true
+            end
           end
         end
       end
