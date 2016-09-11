@@ -22,6 +22,10 @@ class Deck
     !@deck.any?
   end
 
+	def contains_cards?
+		@deck.any?
+	end
+
   def next_card
     @deck.pop
   end

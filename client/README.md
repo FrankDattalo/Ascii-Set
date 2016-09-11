@@ -1,2 +1,3 @@
 Here is the client README,
-this will be the root dir for the client
+
+The client needs depends on having the gem: rest-client and it's dependencies
