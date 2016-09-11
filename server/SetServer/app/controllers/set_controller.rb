@@ -17,15 +17,10 @@ class SetController < ApplicationController
   # schema {accepted: TRUE OR FALSE, data: GAME DATA OR NIL }
   def auth
     name = params[:name]
-		puts name
-    accepted = false
     if !name.nil? && name != "" && !Game.instance.contains_player_name?(name) &&
       !Game.instance.started
-      accepted = true
-    end
 
-    if accepted
-      Game.instance.add_player Player.new(name, nil, nil, 0) # fix this?
+      Game.instance.add_player Player.new(name, nil, nil, 0) # TODO: fix this?
       render json: { accepted: true, data: Game.instance.data }
     else
       render json: {accepted: false, data: nil }
@@ -67,7 +62,7 @@ class SetController < ApplicationController
 			Game.instance.remove_card_from_play active_cards[card1]
 			Game.instance.remove_card_from_play active_cards[card2]
 			Game.instance.remove_card_from_play active_cards[card3]
-			
+
 			Game.instance.deal_up_to_12
 
 			Game.instance.re_index_cards
