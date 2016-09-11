@@ -1,4 +1,4 @@
-require Colorize
+require colorize
 class Card
 
   def self.number
