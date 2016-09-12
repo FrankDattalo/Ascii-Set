@@ -2,13 +2,11 @@ require 'colorize'
 
 class JeffTest
 
-  puts red_color = "----------------\n|              |\n|              |\n|              |\n|              |\n|".red +
-"      _|\n|              |\n|              |\n|              |\n|              |\n|              |\n".red +
-  "----------------".red
 
 
-
-  cardText = "----------------\n"
+card_print = " _____________________________ \n"
+card_print += "|                             |\n"
+card_print += "|                             |\n"
 
   case Card.number
     when 1
@@ -16,10 +14,35 @@ class JeffTest
       case Card.shape
         when squiggle
           if Card.texture = solid
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
 
           elsif Card.texture = striped
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
 
           elsif Card.texture = empty
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            print_squiggle(card_print)
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|_____________________________|\n"
+            puts card_print.red
 
 
           end
@@ -27,20 +50,50 @@ class JeffTest
 
         when oval
           if Card.texture = solid
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
 
           elsif Card.texture = striped
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
 
           elsif Card.texture = empty
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
 
 
           end
 
         when diamond
           if Card.texture = solid
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
 
           elsif Card.texture = striped
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
 
           elsif Card.texture = empty
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
+            card_print += "|                             |\n"
 
 
           end
@@ -135,6 +188,24 @@ class JeffTest
 
     else
 
+  end
+
+  def print_squiggle(card_print)
+    card_print += "|           .~~._.~.          |\n"
+    card_print += "|           \      /          |\n"
+    card_print += "|            ^..^^^           |\n"
+  end
+
+  def print_oval(card_print)
+    card_print += "|            ______           |\n"
+    card_print += "|           /      \          |\n"
+    card_print += "|           \______/          |\n"
+  end
+
+  def print_diamond(card_print)
+    card_print += "|             / \             |\n"
+    card_print += "|             \_/             |\n"
+    card_print += "|                             |\n"
   end
 
 end
