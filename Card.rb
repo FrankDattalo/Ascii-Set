@@ -1,3 +1,4 @@
+require 'colorize'
 class Card
 
   def self.number
@@ -43,9 +44,217 @@ class Card
     "(#{@color}, #{@number}, #{@shape}, #{@texture})"
   end
 
-  def to_ascii
+  def self.print_card(card)
+    card_print = " _____________________________ \n"
+    card_print += "|                             |\n"
+    card_print += "|                             |\n"
+    puts card_print
+    case Card.number
+      when 1
 
-  end
+        case Card.shape
+          when :squiggle
+            if card.texture = solid
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+
+            elsif card.texture = striped
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+
+            elsif card.texture = :empty
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              print_squiggle(card_print)
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|_____________________________|\n"
+              puts card_print.red
+
+            else
+              puts "helpme"
+
+
+            end
+
+
+          when :oval
+            if Card.texture = solid
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+
+            elsif Card.texture = striped
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+
+            elsif Card.texture = empty
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+
+
+            end
+
+          when :diamond
+            if Card.texture = solid
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+
+            elsif Card.texture = striped
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+
+            elsif Card.texture = empty
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+              card_print += "|                             |\n"
+
+
+            end
+
+          else
+
+
+
+        end
+
+
+
+      when 2
+        case Card.shape
+          when squiggle
+            if Card.texture = solid
+
+            elsif Card.texture = striped
+
+            elsif Card.texture = empty
+
+
+            end
+
+
+          when oval
+            if Card.texture = solid
+
+            elsif Card.texture = striped
+
+            elsif Card.texture = empty
+
+
+            end
+
+          when diamond
+            if Card.texture = solid
+
+            elsif Card.texture = striped
+
+            elsif Card.texture = empty
+
+
+            end
+
+          else
+
+
+
+        end
+
+
+      when 3
+        case Card.shape
+          when squiggle
+            if Card.texture = solid
+
+            elsif Card.texture = striped
+
+            elsif Card.texture = empty
+
+
+            end
+
+
+          when oval
+            if Card.texture = solid
+
+            elsif Card.texture = striped
+
+            elsif Card.texture = empty
+
+
+            end
+
+          when diamond
+            if Card.texture = solid
+
+            elsif Card.texture = striped
+
+            elsif Card.texture = empty
+
+
+            end
+
+          else
+
+
+
+        end
+
+
+      else
+
+    end
+
+   end
+
+    def print_squiggle(card_print)
+      card_print += "|           .~~._.~.          |\n"
+      card_print += "|           \      /          |\n"
+      card_print += "|            ^..^^^           |\n"
+    end
+
+    def print_oval(card_print)
+      card_print += "|            ______           |\n"
+      card_print += "|           /      \          |\n"
+      card_print += "|           \______/          |\n"
+    end
+
+    def print_diamond(card_print)
+      card_print += "|             / \             |\n"
+      card_print += "|             \_/             |\n"
+      card_print += "|                             |\n"
+    end
+
+
 
 
   def self.is_set?(card1, card2, card3)
