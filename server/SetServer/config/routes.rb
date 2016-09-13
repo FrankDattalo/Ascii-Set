@@ -15,6 +15,8 @@ Rails.application.routes.draw do
 
 	get 'check-set' => 'set#check_set'
 
+	get '*path' => redirect('/')
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
