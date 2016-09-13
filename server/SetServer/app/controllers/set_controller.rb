@@ -20,10 +20,10 @@ class SetController < ApplicationController
     if !name.nil? && name != "" && !Game.instance.contains_player_name?(name) &&
       !Game.instance.started
 
-      Game.instance.add_player Player.new(name, nil, nil, 0) # TODO: fix this?
-      render json: { accepted: true, data: Game.instance.data }
+      Game.instance.add_player Player.new name
+      render json: { accepted: true }
     else
-      render json: {accepted: false, data: nil }
+      render json: {accepted: false }
     end
   end
 
@@ -34,7 +34,7 @@ class SetController < ApplicationController
   def start
     hasStarted = Game.instance.started
     Game.instance.start if !hasStarted
-    render json: { gamePlayable: !hasStarted }
+    render json: { game_playable: !hasStarted }
   end
 
   # GET
@@ -48,17 +48,20 @@ class SetController < ApplicationController
   # given name params and cards params
   def check_set
     name = params[:name]
-    card1 = params[:card1]
-		card2 = params[:card2]
-		card3 = params[:card3]
+    card1 = params[:card1].capitalize
+		card2 = params[:card2].capitalize
+		card3 = params[:card3].capitalize
 
     player = Game.instance.get_player_by_name name
 		active_cards = Game.instance.active_cards
 
+		response = false
 
-    if cards.size == 3 && Card.is_set?(active_cards[card1], active_cards[card2], active_cards[card3])
+    if Game.instance.started && Card.is_set?(active_cards[card1],
+				active_cards[card2], active_cards[card3])
+
       player.sore += 50 # a set
-			# TODO: remove old cards from play, call deal_up_to_12, and re-index-cards
+
 			Game.instance.remove_card_from_play active_cards[card1]
 			Game.instance.remove_card_from_play active_cards[card2]
 			Game.instance.remove_card_from_play active_cards[card3]
@@ -66,13 +69,12 @@ class SetController < ApplicationController
 			Game.instance.deal_up_to_12
 
 			Game.instance.re_index_cards
-
-    else
+			response = true
+    elsif Game.instance.started
       player.score -= 5 # not a set
     end
 
-
-	  self.deck
+	  render json: { is_set: response }
   end
 
 	def stuck
@@ -90,7 +92,6 @@ class Game
     @deck = Deck.new
     @players = []
     @active_cards = {}
-    @winning = nil
     @started = false
 		@stuck_player_count = 0
   end
@@ -175,9 +176,8 @@ class Game
 
   def data
     {
-        players: @players,
         cards: @active_cards,
-        winning: @winning,
+        players: self.scores,
         started: @started
     }
   end
@@ -190,10 +190,9 @@ class Game
     @players
   end
 
-  def winning
-		# TODO sort over players based on score, return player at highest/lowest index
-    @winning
-  end
+	def active_cards
+		@active_cards
+	end
 
   def re_init
     @deck = Deck.new
@@ -203,4 +202,12 @@ class Game
     @started = false
 		@stuck_player_count = 0
   end
+
+	def scores
+		sorted = @players.sort do |a, b|
+			a.score <=> b.score
+		end
+		sorted
+	end
+	
 end
