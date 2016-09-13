@@ -4,35 +4,44 @@ class Client
 
 	attr_accessor :ip_address, :port
 
-	def initialize(ip_address, port)
+	def initialize(ip_address, port, name)
 		@ip_address = ip_address
 		@port = port
+		@player_name = name
 	end
 
-	def full_name
-		"http://#{@ip_address}:#{@port}"
+	def connect
+			get '/auth?name=' + @player_name
 	end
 
-	def register_name(name)
-		RestClient.get self.full_name + '/auth?name=' + name
-	end
-
-	def game_data
-		RestClient.get self.full_name + '/deck'
+	def get_data
+			get '/deck'
 	end
 
 	def new_game
-		RestClient.get self.full_name + '/new'
+			get '/new'
 	end
 
 	def start_game
-		RestClient.get self.full_name + '/start'
+			get '/start'
 	end
 
+	def is_set?(cardIndex1, cardIndex2, cardIndex3)
+		get('/check-set?name=' + @player_name +
+								'&card1=' + cardIndex1 +
+								'&card2=' + cardIndex2 +
+								'&card3=' + cardIndex3)
+	end
+
+	def stuck
+		puts "TODO: Call To Server"
+	end
+
+	private def get(url_after_slash)
+			RestClient.get full_name + url_after_slash
+	end
+
+	private def full_name
+		"http://#{@ip_address}:#{@port}"
+	end
 end
-
-c = Client.new('127.0.0.1', 3000)
-
-puts c.register_name 'Frank'
-puts c.start_game
-puts c.game_data
