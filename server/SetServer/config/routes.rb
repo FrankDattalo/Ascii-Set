@@ -13,7 +13,13 @@ Rails.application.routes.draw do
 
 	get 'new' => 'set#new'
 
+	get 'stuck' => 'set#stuck'
+
 	get 'check-set' => 'set#check_set'
+
+	get 'un-register' => 'set#un_register'
+
+	get 'players' => 'set#players'
 
 	get '*path' => redirect('/')
 
