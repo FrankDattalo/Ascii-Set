@@ -105,7 +105,7 @@ if JSON.parse(CLIENT.connect)['accepted']
 	game_display_loop_thread.kill
 
 else
-	puts "Could not connect!" # ruh roh
+	puts "Could not connect!" # ruh roh spaghettios
 end
 
 puts "Bye!" # Felicia

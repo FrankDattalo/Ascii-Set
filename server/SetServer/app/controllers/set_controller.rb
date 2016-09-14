@@ -209,5 +209,5 @@ class Game
 		end
 		sorted
 	end
-	
+
 end
