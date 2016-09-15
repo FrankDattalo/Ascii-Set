@@ -27,6 +27,18 @@ class SetController < ApplicationController
     end
   end
 
+	def un_register
+		name = params[:name]
+		if !name.nil? && name != "" && Game.instance.contains_player_name?(name)
+			Game.instance.remove_player name
+		end
+		render json: {} # nothing do here here?
+	end
+
+	def players
+		render json: { players: Game.instance.scores }
+	end
+
   # GET
   # response schema { gamePlayable: TRUE OR FALSE }
   # if gamePlayable is true, then the requester has started the game,
@@ -57,10 +69,13 @@ class SetController < ApplicationController
 
 		response = false
 
-    if Game.instance.started && Card.is_set?(active_cards[card1],
+    if Game.instance.started && active_cards.key?(card1) &&
+			active_cards.key?(card2) &&
+			active_cards.key?(card3) &&
+			Card.is_set?(active_cards[card1],
 				active_cards[card2], active_cards[card3])
 
-      player.sore += 50 # a set
+      player.score += 50 # a set
 
 			Game.instance.remove_card_from_play active_cards[card1]
 			Game.instance.remove_card_from_play active_cards[card2]
@@ -80,7 +95,12 @@ class SetController < ApplicationController
 	def stuck
 		Game.instance.increase_stuck_players
 
-		self.deck # TODO: hints here if all of the players are stuck
+		if Game.instance.all_players_stuck?
+			# TODO: check to see if there is a set, if so issue a hint,
+			# else deal 3 cards
+		end
+
+		render json: {} # Dont really need to return anything significant here
 	end
 
 end
@@ -94,7 +114,23 @@ class Game
     @active_cards = {}
     @started = false
 		@stuck_player_count = 0
-  end
+		@game_over = false
+		@hints = []
+	end
+
+	def remove_player(name)
+		@players.delete_if do |player|
+			player.name == name
+		end
+
+		if @players.empty?
+			self.re_init
+		end
+	end
+
+	def reset_hints
+		@hints = []
+	end
 
 	def remove_card_from_play(card)
 		new_cards = {}
@@ -161,7 +197,7 @@ class Game
 		re_indexed_cards = {}
 
 		@active_cards.each_value do | card |
-			newCards[index[i]]  = card
+			re_indexed_cards[index[i]]  = card
 			i += 1
 		end
 
@@ -178,7 +214,9 @@ class Game
     {
         cards: @active_cards,
         players: self.scores,
-        started: @started
+        started: @started,
+				game_over: @game_over,
+				hints: @hints
     }
   end
 
@@ -198,16 +236,17 @@ class Game
     @deck = Deck.new
     @players  = []
     @active_cards = {}
-    @winning = nil
     @started = false
 		@stuck_player_count = 0
-  end
+		@game_over = false
+		@hints = []
+	end
 
 	def scores
 		sorted = @players.sort do |a, b|
-			a.score <=> b.score
+			b.score <=> a.score
 		end
 		sorted
 	end
-	
+
 end

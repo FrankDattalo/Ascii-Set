@@ -2,6 +2,7 @@ require 'rest-client'
 require 'json'
 require_relative './Card'
 
+PROMPT = "Commands: (reset), (start), (set <c1> <c2> <c3>), (stuck), (quit), (players), (help)"
 SEPARATOR = '-----------------------------------------------------------------------------------------------'
 SECONDS_BETWEEN_POLLS = 1
 
@@ -22,6 +23,7 @@ class Client
 		@port = port
 		@player_name = name
 		@game_print_thread = nil
+		@continue_playing = true
 	end
 
 	def connect
@@ -54,6 +56,7 @@ class Client
 	def print_players
 		players = "Current Players: "
 		JSON.parse(self.players)['players'].each do |player|
+			puts player
 			players += "#{player['name']} "
 		end
 		puts players
@@ -68,7 +71,7 @@ class Client
 		end
 	end
 
-	def print_game_data(hash_of_game_data)
+	def print_game_data(hash_of_data)
 
 		puts SEPARATOR
 
@@ -81,7 +84,7 @@ class Client
 
 		puts SEPARATOR
 
-		CLIENT.print_scores
+		self.print_scores
 
 		puts SEPARATOR
 
@@ -91,6 +94,24 @@ class Client
 		get '/stuck'
 	end
 
+	def start
+		if self.connect
+			puts "Connected Successfully! Type 'start' to start the game."
+
+			self.start_game_print_thread
+			self.input_loop
+			self.end_game_print_thread
+
+			clear
+			puts "Game Over!"
+			CLIENT.print_scores
+
+		else
+			puts "Could not connect! Game may be in progress, name may be taken, or the IP is invalid."
+		end
+		puts 'Bye'
+	end
+
 	def players
 		get '/players'
 	end
@@ -98,15 +119,17 @@ class Client
 	def start_game_print_thread
 		@game_print_thread = Thread.new do
 			cached_data = nil
-			while true
+
+			loop do
 				data = self.get_data
+
 				if data['started'] && data != cached_data
 
 					if data['game_over']
-						continue_playing = false
+						@continue_playing = false
 					else
 						clear
-						self.display_game_data data
+						self.print_game_data data
 					end
 
 				elsif data != cached_data
@@ -117,6 +140,65 @@ class Client
 
 				sleep SECONDS_BETWEEN_POLLS
 
+			end
+		end
+	end
+
+	def input_loop
+		@continue_playing = true
+
+		while @continue_playing
+			input = gets.chomp
+
+			case input
+			when /players/i
+				self.print_players
+
+			when /set [a-z] [a-z] [a-z]/i
+
+				split = input.split
+
+				if self.is_set? split[1], split[2], split[3]
+					puts "You found a set! :D"
+				else
+					puts "Sorry! That wasn't a set. :("
+				end
+
+			when /start/i
+
+				@continue_playing = self.start_game
+
+				if @continue_playing
+					puts "Game is starting!"
+				else
+					puts "Could not start game!"
+				end
+
+			when /help/i # print list of commands on /help
+				puts PROMPT
+
+			when /stuck/i # send stuck signal to server
+				self.stuck
+
+			when /reset/i # reset game on /reset command
+				clear
+				puts 'Resetting Game...'
+				self.new_game
+
+				unless self.connect # re-register name
+					puts 'Could not re-register name after game reset'
+					@continue_playing = false # if we failed to re-register, exit
+				else
+					puts "Reset Successfully. Playing as #{@player_name}. Type 'start' to start the game."
+				end
+
+			when /quit/i #quit game on /quit command
+
+				self.un_register_name # free player's name from server
+				@continue_playing = false
+
+			else # Display Error Message On Invalid Command
+				puts "ERROR #{input} IS INVALID -> #{PROMPT}"
 			end
 		end
 	end

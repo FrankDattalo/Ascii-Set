@@ -45,6 +45,10 @@ class Card
   end
 
 
+	def print
+		Card.print_card self
+	end
+
   def self.print_card(card)
     card_print = " _____________________________ \n"
     card_print += "|                             |\n"
