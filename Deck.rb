@@ -37,9 +37,12 @@ class Deck
     end
 
     #if we didn't escape after all of this, there was no set
-    puts 'No set found in deck. Ending game.'
     false
   end
+
+	def size
+		@deck.size
+	end
 
   def is_empty?
     !@deck.any?

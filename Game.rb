@@ -1,45 +1,41 @@
-require_relative './Deck'
-class Game
-  def initialize
-    @deck = Deck.new
-    @active_cards = []
-    12.times do
-      @active_cards << @deck.next_card
-    end
-  end
+require_relative './Client'
 
-  #Interfaces with the card class to print
-  def print
-    chars = ('A'..'Z').to_a
-    iterator = 0
-    @active_cards.each do |card|
-      puts card
-      puts(chars[iterator])
-      iterator += 1
-    end
-  end
+HOST_PROMPT = "Would you like to host or connect? (host / connect): "
+IP_PROMPT = "Enter an IP address to connect to (Default: localhost): "
+PORT_PROMPT = "Enter a PORT to connect to (Default: 4567): "
+NAME_PROMPT = "Enter your name: "
+INVALID_PROMPT = "Invalid command, exiting the game"
 
-  def deal(*indexes)
-    indexes.each do |index|
-      @active_cards[index] = @deck.next_card
-    end
-  end
+clear
 
-  def playable?
-    @deck.contains_set?
-  end
+print HOST_PROMPT
+input = gets.chomp
 
-  def is_set?(index_1, index_2, index_3)
-    cards = get_cards(index_1, index_2, index_3)
-    Card.is_set?(cards[0], cards[1], cards[2])
-  end
+case input
+when /\Ahost\Z/i
+	exec "ruby API.rb"
 
-  private
+when /\Aconnect\Z/i
+	print NAME_PROMPT
+	PLAYER_NAME = gets.chomp
 
-  def get_cards(index_1, index_2, index_3)
-    ret = []
-    ret << @active_cards[index_1]
-    ret << @active_cards[index_2]
-    ret << @active_cards[index_3]
-  end
+	print IP_PROMPT
+	input = gets.chomp
+	input = "localhost" if input == ""
+	IP = input
+
+	print PORT_PROMPT
+	input = gets.chomp
+	input = "4567" if input == ""
+	PORT = input
+
+	clear
+
+	puts "Attempting to connect to #{IP}:#{PORT} as #{PLAYER_NAME}..."
+
+	CLIENT = Client.new IP, PORT, PLAYER_NAME, true
+
+	CLIENT.start
+else
+	puts INVALID_PROMPT
 end
