@@ -15,6 +15,7 @@ class Server
 		@game_over = false
 		@hints = []
 		@private_hints = []
+		@stuck_players = []
 	end
 
 	def update_game_over
@@ -57,8 +58,11 @@ class Server
 		('A'..'Z').to_a[@active_cards.size]
 	end
 
-	def increase_stuck_players
-		@stuck_player_count += 1
+	def increase_stuck_players(player)
+		unless @stuck_players.include? player
+			@stuck_player_count += 1
+			@stuck_players << player
+		end
 	end
 
 	def all_players_stuck?
@@ -66,6 +70,7 @@ class Server
 	end
 
 	def reset_stuck_count
+		@stuck_players = []
 		@stuck_player_count = 0
 	end
 
@@ -115,20 +120,19 @@ class Server
 	end
 
 	def deal_3_more_cards
-		3.time do
+		3.times do
 			@active_cards[self.next_index] = @deck.next_card unless @deck.is_empty?
 		end
 	end
 
 	def deal_hints
+		return if @hints.any?
 		Thread.new do
 			@hints << @private_hints[0]
 			sleep 3
 			@hints << @private_hints[1]
 			sleep 3
 			@hints << @private_hints[2]
-
-			Server.reset_stuck_count
 		end
 	end
 
@@ -164,6 +168,7 @@ class Server
 		@game_over = false
 		@hints = []
 		@private_hints = []
+		@stuck_players = []
 	end
 
 	def set_in_play?(hash = {add_hints: true})

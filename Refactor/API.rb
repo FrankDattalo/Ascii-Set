@@ -77,6 +77,8 @@ get '/check-set' do
 		Server.instance.update_game_over
 		response = true
 
+		Server.instance.reset_stuck_count
+
 	elsif Server.instance.started
 		player.score -= 5 # not a set
 	end
@@ -86,7 +88,8 @@ end
 
 
 get '/stuck' do
-	Server.instance.increase_stuck_players
+	name = params['name']
+	Server.instance.increase_stuck_players name
 
 	if Server.instance.all_players_stuck?
 		if Server.instance.set_in_play? then
