@@ -12,10 +12,10 @@ print HOST_PROMPT
 input = gets.chomp
 
 case input
-when /host/i
+when /\Ahost\Z/i
 	exec "ruby API.rb"
 
-when /connect/i
+when /\Aconnect\Z/i
 	print NAME_PROMPT
 	PLAYER_NAME = gets.chomp
 
@@ -33,7 +33,7 @@ when /connect/i
 
 	puts "Attempting to connect to #{IP}:#{PORT} as #{PLAYER_NAME}..."
 
-	CLIENT = Client.new IP, PORT, PLAYER_NAME
+	CLIENT = Client.new IP, PORT, PLAYER_NAME, true
 
 	CLIENT.start
 else

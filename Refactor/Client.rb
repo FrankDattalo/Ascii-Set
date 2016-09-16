@@ -18,12 +18,13 @@ class Client
 
 	attr_accessor :ip_address, :port
 
-	def initialize(ip_address, port, name)
+	def initialize(ip_address, port, name, debug = false)
 		@ip_address = ip_address
 		@port = port
 		@player_name = name
 		@game_print_thread = nil
 		@continue_playing = true
+		@debug = debug
 	end
 
 	def connect
@@ -56,7 +57,7 @@ class Client
 	def print_players
 		players = "Current Players: "
 		JSON.parse(self.players)['players'].each do |player|
-			players += "#{player['name']} "
+			players += "(#{player['name']}) "
 		end
 		puts players
 	end
@@ -74,10 +75,14 @@ class Client
 
 		puts SEPARATOR
 
+		puts "Playing As: #{@player_name}"
+
+		puts SEPARATOR
+
 		hash_of_data['cards'].each do |index, card|
 			#number, color, shape, texture
 			c = Card.new(card['number'], card['color'].to_sym, card['shape'].to_sym, card['texture'].to_sym)
-			puts c
+			if @debug then puts c else c.print end
 			puts index
 		end
 
@@ -102,7 +107,7 @@ class Client
 	end
 
 	def stuck
-		get '/stuck'
+		get "/stuck?name=#{@player_name}"
 	end
 
 	def start
@@ -160,6 +165,7 @@ class Client
 	end
 
 	def input_loop
+		can_start = true
 		@continue_playing = true
 
 		while @continue_playing
@@ -167,10 +173,10 @@ class Client
 
 			if @continue_playing then
 				case input
-				when /players/i
+				when /\Aplayers\Z/i
 					self.print_players
 
-				when /set [a-z] [a-z] [a-z]/i
+				when /\Aset [a-z] [a-z] [a-z]\Z/i
 
 					split = input.split
 
@@ -180,20 +186,23 @@ class Client
 						puts "Sorry! That wasn't a set. :("
 					end
 
-				when /start/i
-					if self.start_game then
+				when /\Astart\Z/i
+					if can_start && self.start_game then
 						puts "Game is starting!"
 					else
-						puts "Could not start game! Type 'quit' to quit."
+						puts "Could not start game! Game may already be in progress."
 					end
 
-				when /help/i # print list of commands on /help
+					can_start = false
+
+				when /\Ahelp\Z/i # print list of commands on /help
 					puts PROMPT
 
-				when /stuck/i # send stuck signal to server
+				when /\Astuck\Z/i # send stuck signal to server
 					self.stuck
+					puts "Sent stuck signal to server..."
 
-				when /reset/i # reset game on /reset command
+				when /\Areset\Z/i # reset game on /reset command
 					clear
 					puts 'Resetting Game...'
 					self.new_game
@@ -204,11 +213,11 @@ class Client
 						puts "Could not re-register name after game reset. Type 'quit' to quit"
 					end
 
-				when /quit/i #quit game on /quit command
+				when /\Aquit\Z/i #quit game on /quit command
 					@continue_playing = false
 
 				else # Display Error Message On Invalid Command
-					puts "ERROR #{input} IS INVALID -> #{PROMPT}"
+					puts "ERROR ''#{input}' IS INVALID -> #{PROMPT}"
 				end
 			end
 		end
