@@ -29,7 +29,7 @@ get '/un-register' do
 	if !name.nil? && name != "" && Server.instance.contains_player_name?(name)
 		Server.instance.remove_player name
 	end
-	json {}
+	json response: 'ok'
 end
 
 get '/players' do
@@ -63,6 +63,7 @@ get '/check-set' do
 		active_cards.key?(card3) &&
 		Card.is_set?(active_cards[card1],
 			active_cards[card2], active_cards[card3])
+			Server.instance.reset_hints
 
 		player.score += 50 # a set
 
@@ -73,6 +74,7 @@ get '/check-set' do
 		Server.instance.deal_up_to_12
 
 		Server.instance.re_index_cards
+		Server.instance.update_game_over
 		response = true
 
 	elsif Server.instance.started
@@ -87,9 +89,15 @@ get '/stuck' do
 	Server.instance.increase_stuck_players
 
 	if Server.instance.all_players_stuck?
-		# TODO: check to see if there is a set, if so issue a hint,
-		# else deal 3 cards
+		if Server.instance.set_in_play? then
+			puts "There is a set in play"
+			Server.instance.deal_hints
+		else
+			puts "There was not a set in play and the server should deal"
+			Server.instance.deal_3_more_cards
+			Server.reset_stuck_count
+		end
 	end
 
-	json {}
+	json response: 'ok'
 end

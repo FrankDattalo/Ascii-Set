@@ -1,8 +1,8 @@
 require_relative './Client'
 
 HOST_PROMPT = "Would you like to host or connect? (host / connect): "
-IP_PROMPT = "Enter an IP address to connect to: "
-PORT_PROMPT = "Enter a PORT to connect to: "
+IP_PROMPT = "Enter an IP address to connect to (Default: localhost): "
+PORT_PROMPT = "Enter a PORT to connect to (Default: 4567): "
 NAME_PROMPT = "Enter your name: "
 INVALID_PROMPT = "Invalid command, exiting the game"
 
@@ -20,10 +20,14 @@ when /connect/i
 	PLAYER_NAME = gets.chomp
 
 	print IP_PROMPT
-	IP = gets.chomp
+	input = gets.chomp
+	input = "localhost" if input == ""
+	IP = input
 
 	print PORT_PROMPT
-	PORT = gets.chomp
+	input = gets.chomp
+	input = "4567" if input == ""
+	PORT = input
 
 	clear
 

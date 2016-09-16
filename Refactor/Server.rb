@@ -14,6 +14,16 @@ class Server
 		@stuck_player_count = 0
 		@game_over = false
 		@hints = []
+		@private_hints = []
+	end
+
+	def update_game_over
+		@game_over = true unless (@deck.size + @active_cards.size) > 0 && (self.set_in_play?(add_hints: false) || deck.contains_set?)
+		if @game_over then
+			puts "There is no more sets to play"
+		else
+			puts "A set exists in the deck"
+		end
 	end
 
 	def remove_player(name)
@@ -28,6 +38,7 @@ class Server
 
 	def reset_hints
 		@hints = []
+		@private_hints = []
 	end
 
 	def remove_card_from_play(card)
@@ -35,6 +46,7 @@ class Server
 		i = 0
 		@active_cards.each_value do |card_in_play|
 			new_cards[i] = card_in_play unless card == card_in_play
+			i += 1
 		end
 
 		@active_cards = new_cards
@@ -50,7 +62,7 @@ class Server
 	end
 
 	def all_players_stuck?
-		@players.size == @stuck_player_count
+		@players.size <= @stuck_player_count
 	end
 
 	def reset_stuck_count
@@ -84,7 +96,7 @@ class Server
   end
 
   def deal_up_to_12
-    while @active_cards.size < 12
+    while @active_cards.size < 12 && !@deck.is_empty?
       @active_cards[self.next_index] = @deck.next_card
     end
   end
@@ -104,7 +116,19 @@ class Server
 
 	def deal_3_more_cards
 		3.time do
-			@active_cards[self.next_index] = @deck.next_card if @deck.contains_cards?
+			@active_cards[self.next_index] = @deck.next_card unless @deck.is_empty?
+		end
+	end
+
+	def deal_hints
+		Thread.new do
+			@hints << @private_hints[0]
+			sleep 3
+			@hints << @private_hints[1]
+			sleep 3
+			@hints << @private_hints[2]
+
+			Server.reset_stuck_count
 		end
 	end
 
@@ -114,7 +138,8 @@ class Server
         players: self.scores,
         started: @started,
 				game_over: @game_over,
-				hints: @hints
+				hints: @hints,
+				cards_left: @deck.size
     }
   end
 
@@ -138,6 +163,26 @@ class Server
 		@stuck_player_count = 0
 		@game_over = false
 		@hints = []
+		@private_hints = []
+	end
+
+	def set_in_play?(hash = {add_hints: true})
+		if @private_hints.any? then return true end
+		@active_cards.each do |key1, value1|
+			@active_cards.each do |key2, value2|
+				@active_cards.each do |key3, value3|
+					if key1 != key2 && key2 != key3 && key1 != key3 then
+						if Card.is_set? value1, value2, value3 then
+							if hash[:add_hints] then
+								@private_hints = [key1, key2, key3]
+							end
+							return true
+						end
+					end
+				end
+			end
+		end
+		false
 	end
 
 	def scores
