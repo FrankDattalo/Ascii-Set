@@ -97,7 +97,7 @@ get '/stuck' do
 			Server.instance.deal_hints
 		else
 			Server.instance.deal_3_more_cards
-			Server.reset_stuck_count
+			Server.instance.reset_stuck_count
 		end
 	end
 
