@@ -13,9 +13,7 @@ get '/auth' do
   name = params['name']
 
   accepted = false
-  if !name.nil? && name != "" && !Server.instance.contains_player_name?(name) &&
-      !Server.instance.started
-
+  if !name.nil? && name != "" && !Server.instance.contains_player_name?(name) && !Server.instance.started
     Server.instance.add_player Player.new name
     accepted = true
   end
@@ -57,14 +55,14 @@ get '/check-set' do
 	response = false
 
   if card1 != card2 && card2 != card3 && card1 != card3 &&
-   Server.instance.started && active_cards.key?(card1) &&
-   active_cards.key?(card2) &&
-   active_cards.key?(card3) &&
-   Card.is_set?(active_cards[card1],
-   active_cards[card2], active_cards[card3])
-   Server.instance.reset_hints
+    Server.instance.started && active_cards.key?(card1) &&
+    active_cards.key?(card2) &&
+    active_cards.key?(card3) &&
+    Card.is_set?(active_cards[card1], active_cards[card2], active_cards[card3])
+    
+    Server.instance.reset_hints
 
-		player.score += 50 # a set
+    player.score += 50 # a set
 
     Server.instance.remove_card_from_play active_cards[card1]
     Server.instance.remove_card_from_play active_cards[card2]
@@ -78,7 +76,7 @@ get '/check-set' do
 	  Server.instance.reset_stuck_count
 
   elsif Server.instance.started
-  player.score -= 5 # not a set
+    player.score -= 5 # not a set
 	end
 
   json is_set: response
@@ -90,12 +88,12 @@ get '/stuck' do
   Server.instance.increase_stuck_players name
 
   if Server.instance.all_players_stuck?
-  if Server.instance.set_in_play? then
-  Server.instance.deal_hints
-  else
-  Server.instance.deal_3_more_cards
-  Server.instance.reset_stuck_count
-  end
+    if Server.instance.set_in_play? then
+      Server.instance.deal_hints
+    else
+      Server.instance.deal_3_more_cards
+      Server.instance.reset_stuck_count
+    end
   end
   json stuck_count: Server.instance.stuck_player_count
 end
