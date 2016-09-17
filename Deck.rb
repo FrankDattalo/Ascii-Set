@@ -2,6 +2,7 @@ require_relative "./Card"
 
 class Deck
 
+  #initializes the the card from a deck
   def initialize
     @deck = []
 
@@ -17,6 +18,7 @@ class Deck
     @deck.shuffle!
   end
 
+  #goes through all of the available cards on the screen and checks if there is a set
   def contains_set?
     range1 = (0..(@deck.length-1)).to_a
     range1.each do |x|
@@ -40,14 +42,17 @@ class Deck
     false
   end
 
+  #
 	def size
 		@deck.size
 	end
 
+  #
   def is_empty?
     !@deck.any?
   end
 
+  #
   def next_card
     @deck.pop
   end

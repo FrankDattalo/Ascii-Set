@@ -206,6 +206,7 @@ class Server
 		@stuck_players = []
   end
 
+#returns whether or not there is a set in play
 	def set_in_play?(hash = {add_hints: true})
 		if @private_hints.any? then return true end
 		@active_cards.each do |key1, value1|
@@ -225,10 +226,12 @@ class Server
 		false
 	end
 
+  #keeps count of all the player that are stuck
   def stuck_player_count
     @stuck_player_count
   end
 
+  #keeps track of the game score
 	def scores
 		sorted = @players.sort do |a, b|
 			b.score <=> a.score

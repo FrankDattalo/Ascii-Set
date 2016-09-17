@@ -5,6 +5,7 @@ class Card
   PLAIN_ROW = '|                         |'
   BOTTOM_ROW = '|_________________________|'
 
+  #this colorizes the card
   def resolve_color
     case @color
     when :purple; :magenta
@@ -68,6 +69,7 @@ class Card
     end
   end
 
+  #initializes the texture of each card
   def resolve_texture(number)
     case @texture
     when :solid; self.get_symbol_row_solid number
@@ -151,21 +153,26 @@ class Card
     end
   end
 
+  #number of possibles shapes on each card
   def self.number
     [1, 2, 3]
   end
 
+  #all of the color attributes of each card
   def self.color
     [:red, :green, :purple]
   end
 
+  #all of the shape attributes of each card
   def self.shape
     [:squiggle, :oval, :diamond]
   end
 
+  #all of the texture attributes of each card
   def self.texture
     [:solid, :striped, :empty]
   end
+
 
   def initialize(number, color, shape, texture)
     @shape = shape
