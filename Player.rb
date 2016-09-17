@@ -10,6 +10,6 @@ class Player
   end
 
   def to_json(options = nil)
-		'{"name":%s,"score":%s}' % [@name.to_json, @score.to_json]
+    '{"name":%s,"score":%s}' % [@name.to_json, @score.to_json]
   end
 end
