@@ -1,6 +1,14 @@
 
 Team: Frank Dattalo, Jeffrey Rolland, Mohamed Mayow, Elliot Dehnbostel
 
-- Please Work. 
+#Step 0: Clone Project
+- git clone <repo>
 
-- This is me trying to use my own branch
+#Step 1: Install Bundle
+- gem install bundle
+
+#Step 2: Run Bundle in Repo
+- bundle install
+
+#Step 3: Start Game
+- ruby Game.rb

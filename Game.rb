@@ -1,45 +1,51 @@
-require_relative './Deck'
-class Game
-  def initialize
-    @deck = Deck.new
-    @active_cards = []
-    12.times do
-      @active_cards << @deck.next_card
-    end
-  end
+require_relative './Client'
 
-  #Interfaces with the card class to print
-  def print
-    chars = ('A'..'Z').to_a
-    iterator = 0
-    @active_cards.each do |card|
-      puts card
-      puts(chars[iterator])
-      iterator += 1
-    end
-  end
+WELCOME_PROMPT = "Welcome to TEMPorary Variable's Game of Set! " +
+	" We reccomend you resize your terminal to full screen."
+HOST_PROMPT = "Would you like to host or connect? (host / connect): "
+IP_PROMPT = "Enter an IP address to connect to (Default: localhost): "
+PORT_PROMPT = "Enter a PORT to connect to (Default: 4567): "
+NAME_PROMPT = "Enter your name: "
+INVALID_PROMPT = "Invalid command, exiting the game"
+QUIT_PROMPT = " To quit type 'quit'."
 
-  def deal(*indexes)
-    indexes.each do |index|
-      @active_cards[index] = @deck.next_card
-    end
-  end
+# By trapping CNTRL-C and CNTRL-D throughout our program we prevent two common
+# ways people abort programs thus we will force people to quit using the 'quit'
+trap 'SIGINT' do
+	puts QUIT_PROMPT
+end
+trap 'SIGQUIT' do
+end
 
-  def playable?
-    @deck.contains_set?
-  end
+clear
 
-  def is_set?(index_1, index_2, index_3)
-    cards = get_cards(index_1, index_2, index_3)
-    Card.is_set?(cards[0], cards[1], cards[2])
-  end
+puts WELCOME_PROMPT
+print HOST_PROMPT
+input = gets.chomp
 
-  private
+case input
+when /\Ahost\Z/i
+	exec "ruby API.rb"
 
-  def get_cards(index_1, index_2, index_3)
-    ret = []
-    ret << @active_cards[index_1]
-    ret << @active_cards[index_2]
-    ret << @active_cards[index_3]
-  end
+when /\Aconnect\Z/i
+	print NAME_PROMPT
+	PLAYER_NAME = gets.chomp
+
+	print IP_PROMPT
+	input = gets.chomp
+	input = "localhost" if input == ""
+	IP = input
+
+	print PORT_PROMPT
+	input = gets.chomp
+	input = "4567" if input == ""
+	PORT = input
+
+	puts "Attempting to connect to #{IP}:#{PORT} as #{PLAYER_NAME}..."
+
+	CLIENT = Client.new IP, PORT, PLAYER_NAME
+
+	CLIENT.start
+else
+	puts INVALID_PROMPT
 end
