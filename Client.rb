@@ -68,10 +68,10 @@ class Client
 	end
 
 	def print_scores(players)
-		printf("%-3s %-15s %6s\n", '#', "Names", "Scores")
+		printf("%-3s %-30s %6s\n", '#', "Names", "Scores")
 		i = 1
 		players.each do |player|
-			printf("%-3d %-15s %6s\n", i, player['name'], player['score'])
+			printf("%-3d %-30s %6s\n", i, player['name'], player['score'])
 			i += 1
 		end
 	end
@@ -130,11 +130,32 @@ class Client
 		if cards_to_print.any? then
 			case cards_to_print.size
 			when 1
-				# print one card
+				i = 1
+				while i <= 13
+					puts "#{cards_to_print[0][:card].get_row_string(i)}"
+					i += 1
+				end
+				puts "#{HALF_CARD}#{cards_to_print[0][:index]}#{HALF_CARD}"
 			when 2
-				# print two cards
+				i = 1
+				while i <= 13
+					puts "#{cards_to_print[0][:card].get_row_string(i)}" +
+						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[1][:card].get_row_string(i)}"
+					i += 1
+				end
+				puts "#{HALF_CARD}#{cards_to_print[0][:index]}#{HALF_CARD}" +
+					"#{SPACE_BETWEEN_CARDS}#{HALF_CARD}#{cards_to_print[1][:index]}#{HALF_CARD}"
 			when 3
-				#print three cards
+				i = 1
+				while i <= 13
+					puts "#{cards_to_print[0][:card].get_row_string(i)}" +
+						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[1][:card].get_row_string(i)}" +
+						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[2][:card].get_row_string(i)}"
+					i += 1
+				end
+				puts "#{HALF_CARD}#{cards_to_print[0][:index]}#{HALF_CARD}" +
+					"#{SPACE_BETWEEN_CARDS}#{HALF_CARD}#{cards_to_print[1][:index]}#{HALF_CARD}" +
+					"#{SPACE_BETWEEN_CARDS}#{HALF_CARD}#{cards_to_print[2][:index]}#{HALF_CARD}"
 			else
 				raise Exception, "This should not happen"
 			end
@@ -154,8 +175,6 @@ class Client
 		self.print_scores hash_of_data['players']
 
 		puts SEPARATOR
-
-		print '> '
 
 	end
 
@@ -226,8 +245,6 @@ class Client
 		@continue_playing = true
 
 		while @continue_playing
-			print '> '
-
 			begin
 				input = gets.chomp
 			rescue
