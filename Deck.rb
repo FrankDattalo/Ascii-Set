@@ -43,9 +43,9 @@ class Deck
   end
 
   #finds the size of the deck (#number of cards remaining)
-	def size
-		@deck.size
-	end
+  def size
+    @deck.size
+  end
 
   #figures out if the deck is empty
   def is_empty?
