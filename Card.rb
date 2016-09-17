@@ -182,10 +182,10 @@ class Card
   end
 
 
-	def to_json(options = nil)
-		'{"shape":%s,"color":%s,"texture":%s,"number":%s}' % [@shape.to_json,
-				@color.to_json, @texture.to_json, @number.to_json]
-	end
+  def to_json(options = nil)
+    '{"shape":%s,"color":%s,"texture":%s,"number":%s}' % [@shape.to_json,
+        @color.to_json, @texture.to_json, @number.to_json]
+  end
 
   #color attributes for each card
   def color
@@ -211,9 +211,9 @@ class Card
   end
 
   #prints each card
-	def print
-		Card.print_card self
-	end
+  def print
+    Card.print_card self
+  end
 
   def self.print_card(card)
     card_print = " _____________________________ \n"

@@ -31,7 +31,7 @@ get '/un-register' do
 end
 
 get '/players' do
-	json players: Server.instance.scores
+  json players: Server.instance.scores
 end
 
 get '/start' do
@@ -54,7 +54,7 @@ get '/check-set' do
   player = Server.instance.get_player_by_name name
   active_cards = Server.instance.active_cards
 
-	response = false
+  response = false
 
   if card1 != card2 && card2 != card3 && card1 != card3 &&
    Server.instance.started && active_cards.key?(card1) &&
@@ -64,22 +64,22 @@ get '/check-set' do
    active_cards[card2], active_cards[card3])
    Server.instance.reset_hints
 
-		player.score += 50 # a set
+    player.score += 50 # a set
 
     Server.instance.remove_card_from_play active_cards[card1]
     Server.instance.remove_card_from_play active_cards[card2]
     Server.instance.remove_card_from_play active_cards[card3]
 
-	  Server.instance.deal_up_to_12
+    Server.instance.deal_up_to_12
     Server.instance.re_index_cards
-	  Server.instance.update_game_over
-		response = true
+    Server.instance.update_game_over
+    response = true
 
-	  Server.instance.reset_stuck_count
+    Server.instance.reset_stuck_count
 
   elsif Server.instance.started
   player.score -= 5 # not a set
-	end
+  end
 
   json is_set: response
 end

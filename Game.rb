@@ -1,7 +1,7 @@
 require_relative './Client'
 
 WELCOME_PROMPT = "Welcome to TEMPorary Variable's Game of Set! " +
-	" We reccomend you resize your terminal to full screen."
+  " We reccomend you resize your terminal to full screen."
 HOST_PROMPT = "Would you like to host or connect? (host / connect): "
 IP_PROMPT = "Enter an IP address to connect to (Default: localhost): "
 PORT_PROMPT = "Enter a PORT to connect to (Default: 4567): "
