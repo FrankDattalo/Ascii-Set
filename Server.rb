@@ -3,9 +3,14 @@ require_relative './Card'
 require_relative './Player'
 require 'singleton'
 
+
+# The Server class encapsulates all of the game objects for a single instance
+# of the game.  IE - when hosting a game, there exists one Server class that
+# represents the game.
 class Server
   include Singleton
 
+  # Server constructor
   def initialize
     @deck = Deck.new
     @players = []
@@ -18,10 +23,15 @@ class Server
 		@stuck_players = []
   end
 
+  # This method will update the game_over instance variable
+  # when called.  The variable will be assigned true iff
+  # there are not cards to play or there is no set are cards to play
 	def update_game_over
 		@game_over = true unless (@deck.size + @active_cards.size) > 0 && (self.set_in_play?(add_hints: false) || deck.contains_set?)
 	end
 
+  # This method will remove the player with the name name from the game_over
+  # it also reinstances the game if all players have quit
 	def remove_player(name)
 		@players.delete_if do |player|
 			player.name == name
@@ -32,11 +42,14 @@ class Server
 		end
 	end
 
+  # This method resets the hint system to having no hints
 	def reset_hints
 		@hints = []
 		@private_hints = []
 	end
 
+  # This method will remove the given card from play and re-index the cards
+  # that still remain in play.  This method will not attempt to deal any cards.
 	def remove_card_from_play(card)
 		new_cards = {}
 		i = 0
@@ -49,10 +62,15 @@ class Server
 		self.re_index_cards
 	end
 
+  # This method will return the next index that should be used for a card given
+  # all current indecies.  aka if cards 1 - 12 are in play next_index will
+  # return 'M'
 	def next_index
 		('A'..'Z').to_a[@active_cards.size]
 	end
 
+  # This method will increase the count of stuck players so long as the current
+  # play is not already stuck.  This method is used for hint generation.
 	def increase_stuck_players(player)
 		unless @stuck_players.include? player
 			@stuck_player_count += 1
@@ -60,15 +78,20 @@ class Server
 		end
 	end
 
+  # This method will report whether all players are stuck, useful for hint
+  # generation.
 	def all_players_stuck?
 		@players.size <= @stuck_player_count
 	end
 
+  # This method will reset the count of stuck players,
+  # useful for hint generation.
 	def reset_stuck_count
 		@stuck_players = []
 		@stuck_player_count = 0
 	end
 
+  # Reports wether the player name player exists in the current game.
   def contains_player_name?(player)
     @players.each do |p|
       return true if p.name == player
@@ -76,31 +99,39 @@ class Server
     false
   end
 
+  # Returns the player object corresponding to the name name.
+  # A player object with the name name must exist within the current game.
   def get_player_by_name(name)
     @players.each do |p|
       return p if p.name == name
     end
   end
 
+  # Adds a player to the game.
   def add_player(player)
   	@players << player
   end
 
-  def started # reports whether the current game is in progress
+  # Reports whether the current game is in progress.
+  def started
     @started
   end
 
+  # Starts the current game and deals cards.
   def start
     @started = true
 		self.deal_up_to_12
   end
 
+  # Deals up to 12 cards so long as the deck is not empty.
   def deal_up_to_12
     while @active_cards.size < 12 && !@deck.is_empty?
       @active_cards[self.next_index] = @deck.next_card
     end
   end
 
+  # Re-indexes the cards such that the indecies of each card are the most
+  # alphabetically ordered letters.
 	def re_index_cards
 		index = ('A'..'Z').to_a
 		i = 0
@@ -114,12 +145,15 @@ class Server
 		@active_cards = re_indexed_cards
 	end
 
+  # Deals 3 cards so long as the deck is not empty.
 	def deal_3_more_cards
 		3.times do
 			@active_cards[self.next_index] = @deck.next_card unless @deck.is_empty?
 		end
 	end
 
+  # Attempts to deal hints so long as there are adequate hints to provide, and
+  # hints have not already been provided.
 	def deal_hints
 		return if @hints.any?
 		Thread.new do
@@ -132,6 +166,7 @@ class Server
 		end
 	end
 
+  # Returns a hash of public game data.
   def data
     {
         cards: @active_cards,
@@ -143,18 +178,22 @@ class Server
     }
   end
 
+  # Returns the deck object corresponding to this game.
   def deck
     @deck
   end
 
+  # Returns the player array corresponding to this game.
   def players
     @players
   end
 
+  # Returns a hash of active cards corresponding to this game.
 	def active_cards
 		@active_cards
 	end
 
+  # Re initializes the game.
   def re_init
     @deck = Deck.new
     @players  = []
