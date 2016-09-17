@@ -56,12 +56,12 @@ get '/check-set' do
 	response = false
 
   if card1 != card2 && card2 != card3 && card1 != card3 &&
-		Server.instance.started && active_cards.key?(card1) &&
-		active_cards.key?(card2) &&
-		active_cards.key?(card3) &&
-		Card.is_set?(active_cards[card1],
-			active_cards[card2], active_cards[card3])
-			Server.instance.reset_hints
+   Server.instance.started && active_cards.key?(card1) &&
+   active_cards.key?(card2) &&
+   active_cards.key?(card3) &&
+   Card.is_set?(active_cards[card1],
+   active_cards[card2], active_cards[card3])
+   Server.instance.reset_hints
 
 		player.score += 50 # a set
 
