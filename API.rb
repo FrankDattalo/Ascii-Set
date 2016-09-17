@@ -40,9 +40,10 @@ get '/start' do
   json game_playable: !hasStarted
 end
 
+
 get '/new' do
-	Server.instance.re_init
-	json Server.instance.data
+  Server.instance.re_init
+  json Server.instance.data
 end
 
 get '/check-set' do
