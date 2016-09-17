@@ -70,7 +70,7 @@ get '/check-set' do
     Server.instance.remove_card_from_play active_cards[card2]
     Server.instance.remove_card_from_play active_cards[card3]
 
-	  Server.instance.deal_up_to_12
+    Server.instance.deal_up_to_12
     Server.instance.re_index_cards
 	  Server.instance.update_game_over
 		response = true
