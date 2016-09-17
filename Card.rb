@@ -882,7 +882,7 @@ class Card
       end
     end
 
-  #figures a
+  #figures out whether the three cards are a set
   def self.is_set?(card1, card2, card3)
     Card.contains_same_or_all_different(:color, card1, card2, card3) &&
         Card.contains_same_or_all_different(:number, card1, card2, card3) &&
@@ -892,11 +892,14 @@ class Card
 
   private
 
+  #checks if there exists a set in which all cards follow a mixture of the same property or different property of the
+  #game
   def self.contains_same_or_all_different(property, card1, card2, card3)
     Card.contains_all_same(property, card1, card2, card3) ||
         Card.contains_all_different(property, card1, card2, card3)
   end
 
+  #checks if there exists a set in which all cards follow the same property
   def self.contains_all_same(property, card1, card2, card3)
     prop = card1.send(property) #get the value of the property
     return false if prop != card2.send(property) # if the second property is not the same return false
@@ -904,6 +907,7 @@ class Card
     true # true because they must be all same
   end
 
+  #checks if there exists a set in which all cards follow the different property
   def self.contains_all_different(property, card1, card2, card3)
     return false if card1.send(property) == card2.send(property)
     return false if card1.send(property) == card3.send(property)

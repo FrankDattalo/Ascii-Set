@@ -42,17 +42,17 @@ class Deck
     false
   end
 
-  #
+  #finds the size of the deck (#number of cards remaining)
 	def size
 		@deck.size
 	end
 
-  #
+  #figures out if the deck is empty
   def is_empty?
     !@deck.any?
   end
 
-  #
+  #pops off the next card
   def next_card
     @deck.pop
   end

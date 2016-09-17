@@ -1,6 +1,7 @@
 require_relative "./Card"
 require_relative "./Deck"
 
+#while the deck isnt empty it keeps going
 deck = Deck.new
 while !deck.is_empty?
   c1 = deck.next_card
