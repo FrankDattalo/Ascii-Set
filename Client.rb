@@ -216,16 +216,14 @@ class Client
 				data = self.get_data
 
 				if data['started'] && data != cached_data
+					clear
+					self.print_game_data data
 
 					if data['game_over']
 						@continue_playing = false
 
 						puts "Game Over! Deck is empty or there are no more sets!"
-						self.print_scores
-
-					else
-						clear
-						self.print_game_data data
+						self.print_scores data['players']
 					end
 
 				elsif data != cached_data

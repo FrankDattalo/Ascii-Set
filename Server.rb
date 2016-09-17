@@ -125,9 +125,9 @@ class Server
 		Thread.new do
       @private_hints.shuffle! if @private_hints.any?
 			@hints << @private_hints[0] if @private_hints.any? && @private_hints.size > 0
-			sleep 3
+			#sleep 3
 			@hints << @private_hints[1] if @private_hints.any? && @private_hints.size > 1
-			sleep 3
+			#sleep 3
 			@hints << @private_hints[2] if @private_hints.any? && @private_hints.size > 2
 		end
 	end
