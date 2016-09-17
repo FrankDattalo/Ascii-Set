@@ -183,9 +183,9 @@ For each correct SET, the player will receive 50 points.
 
 The score board will continuously display - 
 
-Cards Remaining: 81, Hints:
+    Cards Remaining: 81, Hints:
     Names                          Scores
-1   jeffy                              -5
+    1   jeffy                              -5
 ------------------------------------------------------------------------------------------------------------------------
 
 It will highlight the number of Cards Remaining, the Hints that have been 
