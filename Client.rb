@@ -80,15 +80,6 @@ class Client
 
 		puts "Playing As: #{@player_name}"
 
-		# hash_of_data['cards'].each do |index, card|
-		# 	#number, color, shape, texture
-		# 	c = Card.new(card['number'], card['color'].to_sym, card['shape'].to_sym, card['texture'].to_sym)
-		# 	if @debug then puts c else c.print end
-		# 	puts index
-		# end
-
-		# Printing of cards in rows
-
 		card_array = []
 
 		hash_of_data['cards'].each do |index, card|
@@ -110,14 +101,11 @@ class Client
 			cards_to_print << card_array.shift
 			if cards_to_print.size == 4 then
 				#print four cards
-
-				i = 1
-				while i <= 13
-					puts "#{cards_to_print[0][:card].get_row_string(i)}" +
-						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[1][:card].get_row_string(i)}" +
-						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[2][:card].get_row_string(i)}" +
-						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[3][:card].get_row_string(i)}"
-					i += 1
+				13.times do |i|
+					puts "#{cards_to_print[0][:card].get_row_string(i + 1)}" +
+						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[1][:card].get_row_string(i + 1)}" +
+						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[2][:card].get_row_string(i + 1)}" +
+						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[3][:card].get_row_string(i + 1)}"
 				end
 				puts "#{HALF_CARD}#{cards_to_print[0][:index]}#{HALF_CARD}" +
 					"#{SPACE_BETWEEN_CARDS}#{HALF_CARD}#{cards_to_print[1][:index]}#{HALF_CARD}" +
@@ -130,28 +118,22 @@ class Client
 		if cards_to_print.any? then
 			case cards_to_print.size
 			when 1
-				i = 1
-				while i <= 13
-					puts "#{cards_to_print[0][:card].get_row_string(i)}"
-					i += 1
+				13.times do |i|
+					puts "#{cards_to_print[0][:card].get_row_string(i + 1)}"
 				end
 				puts "#{HALF_CARD}#{cards_to_print[0][:index]}#{HALF_CARD}"
 			when 2
-				i = 1
-				while i <= 13
-					puts "#{cards_to_print[0][:card].get_row_string(i)}" +
-						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[1][:card].get_row_string(i)}"
-					i += 1
+				13.times do |i|
+					puts "#{cards_to_print[0][:card].get_row_string(i + 1)}" +
+						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[1][:card].get_row_string(i + 1)}"
 				end
 				puts "#{HALF_CARD}#{cards_to_print[0][:index]}#{HALF_CARD}" +
 					"#{SPACE_BETWEEN_CARDS}#{HALF_CARD}#{cards_to_print[1][:index]}#{HALF_CARD}"
 			when 3
-				i = 1
-				while i <= 13
-					puts "#{cards_to_print[0][:card].get_row_string(i)}" +
-						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[1][:card].get_row_string(i)}" +
-						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[2][:card].get_row_string(i)}"
-					i += 1
+				13.times do |i|
+					puts "#{cards_to_print[0][:card].get_row_string(i + 1)}" +
+						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[1][:card].get_row_string(i + 1)}" +
+						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[2][:card].get_row_string(i + 1)}"
 				end
 				puts "#{HALF_CARD}#{cards_to_print[0][:index]}#{HALF_CARD}" +
 					"#{SPACE_BETWEEN_CARDS}#{HALF_CARD}#{cards_to_print[1][:index]}#{HALF_CARD}" +
