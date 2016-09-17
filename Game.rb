@@ -12,7 +12,7 @@ QUIT_PROMPT = " To quit type 'quit'."
 # By trapping CNTRL-C and CNTRL-D throughout our program we prevent two common
 # ways people abort programs thus we will force people to quit using the 'quit'
 trap 'SIGINT' do
-	puts QUIT_PROMPT
+  puts QUIT_PROMPT
 end
 trap 'SIGQUIT' do
 end
@@ -25,27 +25,26 @@ input = gets.chomp
 
 case input
 when /\Ahost\Z/i
-	exec "ruby API.rb"
+  exec "ruby API.rb"
 
 when /\Aconnect\Z/i
-	print NAME_PROMPT
-	PLAYER_NAME = gets.chomp
-
-	print IP_PROMPT
-	input = gets.chomp
-	input = "localhost" if input == ""
-	IP = input
-
-	print PORT_PROMPT
-	input = gets.chomp
-	input = "4567" if input == ""
-	PORT = input
-
-	puts "Attempting to connect to #{IP}:#{PORT} as #{PLAYER_NAME}..."
-
-	CLIENT = Client.new IP, PORT, PLAYER_NAME
-
-	CLIENT.start
+  print NAME_PROMPT
+  PLAYER_NAME = gets.chomp
+  
+  print IP_PROMPT
+  input = gets.chomp
+  input = "localhost" if input == ""
+  IP = input
+  
+  print PORT_PROMPT
+  input = gets.chomp
+  input = "4567" if input == ""
+  PORT = input
+  
+  puts "Attempting to connect to #{IP}:#{PORT} as #{PLAYER_NAME}..."
+  CLIENT = Client.new IP, PORT, PLAYER_NAME
+  
+  CLIENT.start
 else
-	puts INVALID_PROMPT
+  puts INVALID_PROMPT
 end
