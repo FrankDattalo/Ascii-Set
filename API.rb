@@ -85,16 +85,16 @@ end
 
 
 get '/stuck' do
-	name = params['name']
-	Server.instance.increase_stuck_players name
+  name = params['name']
+  Server.instance.increase_stuck_players name
 
-	if Server.instance.all_players_stuck?
-   if Server.instance.set_in_play? then
+  if Server.instance.all_players_stuck?
+  if Server.instance.set_in_play? then
   Server.instance.deal_hints
   else
   Server.instance.deal_3_more_cards
   Server.instance.reset_stuck_count
-   end
-   end
+  end
+  end
   json stuck_count: Server.instance.stuck_player_count
 end
