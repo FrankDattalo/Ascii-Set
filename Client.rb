@@ -9,7 +9,7 @@ SEPARATOR = '-------------------------------------------------------------------
 SECONDS_BETWEEN_POLLS = 1
 SPACE_BETWEEN_CARDS = "    "
 HALF_CARD = "             "
-
+# Sys call to clear the screen so that  the game is not constantly scrolling
 def clear
 	print NEWLINES
 	begin
@@ -19,6 +19,11 @@ def clear
 	end
 end
 
+#Defines what a client can do
+#clients can:
+# Connect to a server, get data from a server, start a new game, leave the game,
+# start a game, ask the server if there is a set, print game data, ect.
+# all of the actual meaty game logic exists on the server in Server.rb and API.rb
 class Client
 
 	attr_accessor :ip_address, :port
@@ -59,13 +64,15 @@ class Client
 								'&card3=' + cardIndex3))['is_set']
 	end
 
+  #makes a network cal to get players with self.players than prints player related information
+  #JSON.parse returns a hash map which we access each player with
 	def print_players
 		players = "Current Players: "
 		JSON.parse(self.players)['players'].each do |player|
 			players += "(#{player['name']}) "
 		end
 		puts players
-	end
+  end
 
 	def print_scores(players)
 		printf("%-3s %-30s %6s\n", '#', "Names", "Scores")
@@ -76,6 +83,8 @@ class Client
 		end
 	end
 
+	#this just prints the screen you see when you play the game. It's lots of complicated logic but it works.
+  #this is pulling data from the hash which is populated by server data
 	def print_game_data(hash_of_data)
 
 		puts "Playing As: #{@player_name}"
@@ -164,6 +173,7 @@ class Client
 		if @debug then DEBUG_PROMPT else PROMPT end
 	end
 
+  #if all players are stuck, then we slowly show more hints until a full set is displayed.
 	def stuck
 		JSON.parse(get "/stuck?name=#{@player_name}")
 	end
@@ -190,6 +200,7 @@ class Client
 		get '/players'
 	end
 
+  #this printing thread is separate from the thread which reads user input. the thread reading user input is blocking.
 	def start_game_print_thread
 		@game_print_thread = Thread.new do
 			cached_data = nil
@@ -220,6 +231,9 @@ class Client
 		end
 	end
 
+  #runs on its own thread, and receives user input.
+  #Example: when user enters a set, it goes to the server (blocking) and gets whether or not it is a set
+  #The game printing loop is constantly getting information from the server to see if there are any updates
 	def input_loop
 		can_start = true
 		@continue_playing = true
@@ -287,6 +301,7 @@ class Client
 		end
 	end
 
+  
 	def end_game_print_thread
 		@game_print_thread.kill
 	end
