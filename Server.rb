@@ -16,15 +16,10 @@ class Server
 		@hints = []
 		@private_hints = []
 		@stuck_players = []
-	end
+  end
 
 	def update_game_over
 		@game_over = true unless (@deck.size + @active_cards.size) > 0 && (self.set_in_play?(add_hints: false) || deck.contains_set?)
-		if @game_over then
-			puts "There is no more sets to play"
-		else
-			puts "A set exists in the deck"
-		end
 	end
 
 	def remove_player(name)
@@ -169,7 +164,7 @@ class Server
 		@hints = []
 		@private_hints = []
 		@stuck_players = []
-	end
+  end
 
 	def set_in_play?(hash = {add_hints: true})
 		if @private_hints.any? then return true end
@@ -189,6 +184,10 @@ class Server
 		end
 		false
 	end
+
+  def stuck_player_count
+    @stuck_player_count
+  end
 
 	def scores
 		sorted = @players.sort do |a, b|

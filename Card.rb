@@ -1,6 +1,155 @@
 require 'colorize'
 
 class Card
+  TOP_ROW = ' _________________________ '
+  PLAIN_ROW = '|                         |'
+  BOTTOM_ROW = '|_________________________|'
+
+  def resolve_color
+    case @color
+    when :purple; :magenta
+    else
+      @color
+    end
+  end
+
+  def get_row_string(data)
+    self.resolve_number data
+  end
+
+  def resolve_number(data)
+    case @number
+    when 1; {
+        1 => TOP_ROW,
+        2 => PLAIN_ROW,
+        3 => PLAIN_ROW,
+        4 => PLAIN_ROW,
+        5 => PLAIN_ROW,
+        6 => self.resolve_texture(1),
+        7 => self.resolve_texture(2),
+        8 => self.resolve_texture(3),
+        9 => PLAIN_ROW,
+        10 => PLAIN_ROW,
+        11 => PLAIN_ROW,
+        12 => PLAIN_ROW,
+        13 => BOTTOM_ROW
+    }[data].colorize color: self.resolve_color
+    when 2; {
+        1 => TOP_ROW,
+        2 => PLAIN_ROW,
+        3 => self.resolve_texture(1),
+        4 => self.resolve_texture(2),
+        5 => self.resolve_texture(3),
+        6 => PLAIN_ROW,
+        7 => PLAIN_ROW,
+        8 => PLAIN_ROW,
+        9 => self.resolve_texture(1),
+        10 => self.resolve_texture(2),
+        11 => self.resolve_texture(3),
+        12 => PLAIN_ROW,
+        13 => BOTTOM_ROW
+      }[data].colorize color: self.resolve_color
+    when 3; {
+        1 => TOP_ROW,
+        2 => self.resolve_texture(1),
+        3 => self.resolve_texture(2),
+        4 => self.resolve_texture(3),
+        5 => PLAIN_ROW,
+        6 => self.resolve_texture(1),
+        7 => self.resolve_texture(2),
+        8 => self.resolve_texture(3),
+        9 => PLAIN_ROW,
+        10 => self.resolve_texture(1),
+        11 => self.resolve_texture(2),
+        12 => self.resolve_texture(3),
+        13 => BOTTOM_ROW
+      }[data].colorize color: self.resolve_color
+    else raise Exception, "This should not happen"
+    end
+  end
+
+  def resolve_texture(number)
+    case @texture
+    when :solid; self.get_symbol_row_solid number
+    when :striped; self.get_symbol_row_striped number
+    when :empty; self.get_symbol_row_empty number
+    else raise Exception, "This should not happen"
+    end
+  end
+
+
+
+  def get_symbol_row_empty(row)
+    case @shape
+    when :squiggle
+      {
+        1 =>  '|        .~~._.~.         |',
+        2 =>  '|        \\      /         |',
+        3 =>  '|         ^..^^^          |'
+      }[row]
+    when :diamond
+      {
+        1 => '|            _            |',
+        2 => '|           / \\           |',
+        3 => '|           \\_/           |'
+      }[row]
+    when :oval
+      {
+        1 => '|          ______         |',
+        2 => '|         /      \\        |',
+        3 => '|         \\______/        |'
+      }[row]
+    else raise Exception, "This should not happen"
+    end
+  end
+
+  def get_symbol_row_striped(row)
+    case @shape
+    when :squiggle
+      {
+        1 =>  '|        .~~._.~.         |',
+        2 =>  '|        \\XXXXXX/         |',
+        3 =>  '|         ^..^^^          |'
+      }[row]
+    when :diamond
+      {
+        1 => '|            _            |',
+        2 => '|           /X\\           |',
+        3 => '|           \\X/           |'
+      }[row]
+    when :oval
+      {
+        1 => '|          ______         |',
+        2 => '|         /XXXXXX\\        |',
+        3 => '|         \\XXXXXX/        |'
+      }[row]
+    else raise Exception, "This should not happen"
+    end
+  end
+
+  def get_symbol_row_solid(row)
+    case @shape
+    when :squiggle
+      {
+        1 =>  '|        .~~._.~.         |',
+        2 =>  '|        \\@@@@@@/         |',
+        3 =>  '|         ^..^^^          |'
+      }[row]
+    when :diamond
+      {
+        1 => '|            _            |',
+        2 => '|           /@\           |',
+        3 => '|           \\@/           |'
+      }[row]
+    when :oval
+      {
+        1 => '|          ______         |',
+        2 => '|         /@@@@@@\\        |',
+        3 => '|         \\@@@@@@/        |'
+      }[row]
+    else raise Exception, "This should not happen"
+    end
+  end
 
   def self.number
     [1, 2, 3]

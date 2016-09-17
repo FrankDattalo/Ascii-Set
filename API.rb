@@ -93,14 +93,12 @@ get '/stuck' do
 
 	if Server.instance.all_players_stuck?
 		if Server.instance.set_in_play? then
-			puts "There is a set in play"
 			Server.instance.deal_hints
 		else
-			puts "There was not a set in play and the server should deal"
 			Server.instance.deal_3_more_cards
 			Server.reset_stuck_count
 		end
 	end
 
-	json response: 'ok'
+	json stuck_count: Server.instance.stuck_player_count
 end

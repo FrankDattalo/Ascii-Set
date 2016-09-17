@@ -2,11 +2,16 @@ require 'rest-client'
 require 'json'
 require_relative './Card'
 
-PROMPT = "Commands: (reset), (start), (set <c1> <c2> <c3>), (stuck), (quit), (players), (help)"
-SEPARATOR = '-----------------------------------------------------------------------------------------------'
+PROMPT = "Commands: (start), (set <c1> <c2> <c3>), (stuck), (quit), (players), (help)"
+DEBUG_PROMPT = "DEBUG Commands: (start), (new), (set <c1> <c2> <c3>), (stuck), (quit), (players), (help)"
+NEWLINES = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+SEPARATOR = '------------------------------------------------------------------------------------------------------------------------'
 SECONDS_BETWEEN_POLLS = 1
+SPACE_BETWEEN_CARDS = "    "
+HALF_CARD = "             "
 
 def clear
+	print NEWLINES
 	begin
 		system 'clear' or system 'cls'
 	rescue
@@ -62,10 +67,10 @@ class Client
 		puts players
 	end
 
-	def print_scores
+	def print_scores(players)
 		printf("%-3s %-15s %6s\n", '#', "Names", "Scores")
 		i = 1
-		JSON.parse(self.players)['players'].each do |player|
+		players.each do |player|
 			printf("%-3d %-15s %6s\n", i, player['name'], player['score'])
 			i += 1
 		end
@@ -73,26 +78,67 @@ class Client
 
 	def print_game_data(hash_of_data)
 
-		puts SEPARATOR
-
 		puts "Playing As: #{@player_name}"
 
-		puts SEPARATOR
+		# hash_of_data['cards'].each do |index, card|
+		# 	#number, color, shape, texture
+		# 	c = Card.new(card['number'], card['color'].to_sym, card['shape'].to_sym, card['texture'].to_sym)
+		# 	if @debug then puts c else c.print end
+		# 	puts index
+		# end
+
+		# Printing of cards in rows
+
+		card_array = []
 
 		hash_of_data['cards'].each do |index, card|
-			#number, color, shape, texture
-			c = Card.new(card['number'], card['color'].to_sym, card['shape'].to_sym, card['texture'].to_sym)
-			if @debug then puts c else c.print end
-			puts index
+			card_array << {
+				index: index,
+				card: Card.new(card['number'],
+					card['color'].to_sym,
+					card['shape'].to_sym,
+					card['texture'].to_sym)
+				}
 		end
 
-		puts SEPARATOR
+		card_array.sort! do |a, b|
+			a[:index] <=> b[:index]
+		end
 
-		puts "Cards Remaining: #{hash_of_data['cards_left'] + 12}"
+		cards_to_print = []
+		while card_array.any?
+			cards_to_print << card_array.shift
+			if cards_to_print.size == 4 then
+				#print four cards
 
-		puts SEPARATOR
+				i = 1
+				while i <= 13
+					puts "#{cards_to_print[0][:card].get_row_string(i)}" +
+						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[1][:card].get_row_string(i)}" +
+						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[2][:card].get_row_string(i)}" +
+						"#{SPACE_BETWEEN_CARDS}#{cards_to_print[3][:card].get_row_string(i)}"
+					i += 1
+				end
+				puts "#{HALF_CARD}#{cards_to_print[0][:index]}#{HALF_CARD}" +
+					"#{SPACE_BETWEEN_CARDS}#{HALF_CARD}#{cards_to_print[1][:index]}#{HALF_CARD}" +
+					"#{SPACE_BETWEEN_CARDS}#{HALF_CARD}#{cards_to_print[2][:index]}#{HALF_CARD}" +
+					"#{SPACE_BETWEEN_CARDS}#{HALF_CARD}#{cards_to_print[3][:index]}#{HALF_CARD}"
+				cards_to_print = []
+			end
+		end
 
-		self.print_scores
+		if cards_to_print.any? then
+			case cards_to_print.size
+			when 1
+				# print one card
+			when 2
+				# print two cards
+			when 3
+				#print three cards
+			else
+				raise Exception, "This should not happen"
+			end
+		end
 
 		puts SEPARATOR
 
@@ -100,18 +146,29 @@ class Client
 		hash_of_data['hints'].each do |h|
 			hints += " #{h}"
 		end
-		puts hints
+
+		puts "Cards Remaining: #{hash_of_data['cards_left'] + hash_of_data['cards'].size}, #{hints}"
 
 		puts SEPARATOR
 
+		self.print_scores hash_of_data['players']
+
+		puts SEPARATOR
+
+
+
+	end
+
+	def prompt
+		if @debug then DEBUG_PROMPT else PROMPT end
 	end
 
 	def stuck
-		get "/stuck?name=#{@player_name}"
+		JSON.parse(get "/stuck?name=#{@player_name}")
 	end
 
 	def start
-		puts PROMPT
+		puts prompt
 
 		if self.connect
 			puts "Connected Successfully! Type 'start' to start the game."
@@ -145,7 +202,7 @@ class Client
 						@continue_playing = false
 
 						puts "Game Over! Deck is empty or there are no more sets!"
-						CLIENT.print_scores
+						self.print_scores
 
 					else
 						clear
@@ -169,7 +226,13 @@ class Client
 		@continue_playing = true
 
 		while @continue_playing
-			input = gets.chomp
+			print '> '
+
+			begin
+				input = gets.chomp
+			rescue
+				input = "help"
+			end
 
 			if @continue_playing then
 				case input
@@ -196,28 +259,32 @@ class Client
 					can_start = false
 
 				when /\Ahelp\Z/i # print list of commands on /help
-					puts PROMPT
+					puts prompt
 
 				when /\Astuck\Z/i # send stuck signal to server
-					self.stuck
 					puts "Sent stuck signal to server..."
+					puts "Stuck Players: #{self.stuck['stuck_count']}"
+
 
 				when /\Areset\Z/i # reset game on /reset command
-					clear
-					puts 'Resetting Game...'
-					self.new_game
+					if @debug then
+						clear
+						puts 'Resetting Game...'
+						self.new_game
 
-					if self.connect then
-						puts "Reset Successfully. Playing as #{@player_name}. Type 'start' to start the game."
+						if self.connect then
+							puts "Reset Successfully. Playing as #{@player_name}. Type 'start' to start the game."
+						else
+							puts "Could not re-register name after game reset. Type 'quit' to quit"
+						end
 					else
-						puts "Could not re-register name after game reset. Type 'quit' to quit"
+						puts "ERROR '#{input}' IS INVALID -> #{prompt}"
 					end
-
 				when /\Aquit\Z/i #quit game on /quit command
 					@continue_playing = false
 
 				else # Display Error Message On Invalid Command
-					puts "ERROR ''#{input}' IS INVALID -> #{PROMPT}"
+					puts "ERROR '#{input}' IS INVALID -> #{prompt}"
 				end
 			end
 		end
