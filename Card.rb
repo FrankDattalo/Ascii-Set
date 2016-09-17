@@ -173,7 +173,7 @@ class Card
     [:solid, :striped, :empty]
   end
 
-
+#iniiazlizes each card with each of the four possible attributes
   def initialize(number, color, shape, texture)
     @shape = shape
     @color = color
@@ -181,23 +181,27 @@ class Card
     @number = number
   end
 
+
 	def to_json(options = nil)
 		'{"shape":%s,"color":%s,"texture":%s,"number":%s}' % [@shape.to_json,
 				@color.to_json, @texture.to_json, @number.to_json]
 	end
 
+  #color attributes for each card
   def color
     @color
   end
 
+  #number of shapes per card
   def number
     @number
   end
-
+  #texture attributes for each card
   def texture
     @texture
   end
 
+  #shape attributes for each card
   def shape
     @shape
   end
@@ -206,7 +210,7 @@ class Card
     "(#{@color}, #{@number}, #{@shape}, #{@texture})"
   end
 
-
+  #prints each card
 	def print
 		Card.print_card self
 	end
@@ -781,13 +785,13 @@ class Card
     end
   end
 
-
+    #prints the squiggle
     def self.print_squiggle(card_print)
       card_print += "|           .~~._.~.          |\n"
       card_print += "|           \\      /          |\n"
       card_print += "|            ^..^^^           |\n"
     end
-
+    #prints the squiggle solid
     def self.print_squiggle_solid(card_print, card)
       if card.color == :red
         card_print += "|           .~~._.~.          |\n"
@@ -806,7 +810,7 @@ class Card
       end
 
     end
-
+    #prints the squiggle striped
     def self.print_squiggle_striped(card_print)
       card_print += "|           .~~._.~.          |\n"
       card_print += "|           \\xxxxxx/          |\n"
@@ -833,31 +837,31 @@ class Card
       end
 
     end
-
+    #prints the oval
     def self.print_oval(card_print)
       card_print += "|            ______           |\n"
       card_print += "|           /      \\          |\n"
       card_print += "|           \\______/          |\n"
     end
-
+    #prints the oval striped
     def self.print_oval_striped(card_print)
       card_print += "|            ______           |\n"
       card_print += "|           /xxxxxx\\          |\n"
       card_print += "|           \\______/          |\n"
     end
-
+    #prints the diamond
     def self.print_diamond(card_print)
       card_print += "|             / \\             |\n"
       card_print += "|             \\_/             |\n"
       card_print += "|                             |\n"
-    end
-
+  end
+    #prints the diamond stripe
     def self.print_diamond_striped(card_print)
       card_print += "|             /x\\             |\n"
       card_print += "|             \\_/             |\n"
       card_print += "|                             |\n"
     end
-
+    #prints the diamond solid
     def self.print_diamond_solid(card_print, card)
       if card.color == :red
         card_print += "|             /" + " ".colorize(:color => :red, :background => :red) + "\\             |\n"
@@ -878,8 +882,7 @@ class Card
       end
     end
 
-
-
+  #figures a
   def self.is_set?(card1, card2, card3)
     Card.contains_same_or_all_different(:color, card1, card2, card3) &&
         Card.contains_same_or_all_different(:number, card1, card2, card3) &&
