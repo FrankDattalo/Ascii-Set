@@ -12,7 +12,7 @@ end
 get '/auth' do
 	name = params['name']
 
-	accepted = false
+  accepted = false
 	if !name.nil? && name != "" && !Server.instance.contains_player_name?(name) &&
 		!Server.instance.started
 
