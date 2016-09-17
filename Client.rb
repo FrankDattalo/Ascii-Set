@@ -155,7 +155,7 @@ class Client
 
 		puts SEPARATOR
 
-
+		print '> '
 
 	end
 
