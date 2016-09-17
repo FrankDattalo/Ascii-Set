@@ -302,4 +302,7 @@ Features that take it above and beyond -
     
 READY, GET SET, SET! ;)
 
+## TO TEST
+
+To test our multiplayer features, it is recommended to open two terminals.
 
