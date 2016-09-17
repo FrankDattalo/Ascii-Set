@@ -1,6 +1,6 @@
 class Player
 
-	
+
 	attr_accessor :score
 	attr_reader :name
 
@@ -11,5 +11,5 @@ class Player
 
 	def to_json(options = nil)
 		'{"name":%s,"score":%s}' % [@name.to_json, @score.to_json]
-	end
+  end
 end
