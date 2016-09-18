@@ -53,7 +53,7 @@ or
 
     connect
     
-If you select host, our multiplayer REST based HTTP server will be launched!
+If you select host, our multiplayer REST based HTTP server will be launched!  From that point if you would like to connect to it, you must launch another terminal and type connect.
 
 If you select connect - 
 
