@@ -1,0 +1,45 @@
+Rubric for Project 2: Game of Set
+
+Grader: Simon Stuard
+
+Team Name: Temporary Variables
+
+Grade: 18.5/20
+
+Comments: You really went above and beyond with the network based game, this was great. 
+The GUI could be a bit more helpful to the user when playing. 
+I also found that the hint function didn't return a hint when two players were connected to the host. 
+Also, in your README, describe the organization of your code/classes. 
+Other than this, you guys are on the right track! Great project.
+
+### Documentation ###
+
+4. Excellent
+* Readme is thorough
+* In-code documentation is complete (e.g. mathematical models for abstractions)
+* Writing is compelling and crisp
+
+### Correctness ###
+
+3.5. Great
+* Fully correct and very robust, even to almost all malicious user actions. If you type in a letter that is not on the board for the cards, it is still accepted.
+
+### Functionality/Features ###
+
+3.5. Great
+* Particularly engaging game with several extra features. I ony take off 0.5 here because the GUI could be a bit more helpful to the user in the card designs, but overall still a somewhat easy game to play. Also, with multiple players on localhost, the hint command didn't return any hints after the request.
+* People will want to play this game in their spare time
+
+### Style ###
+
+3.5. Great
+* Strict adherence to a known style
+* No documented style rules - describe your style rules in the README, how did you organize the code?
+* Excellent use of standard libraries and idiomatic Ruby
+
+### Design ###
+
+4. Excellent
+* Beautiful classes with clean APIs
+* Clear separation of abstraction and concrete representation
+* Trivially generalizable along multiple dimensions
